@@ -22,9 +22,23 @@ const mockData = [
   },
   {
     id:2,
-    date: moment().add(4,'M').format('yyyy.MM.DD'),
+    date: moment().subtract(4,'D').format('yyyy.MM.DD'),
+    cost:200000,
+    content : "운동하기",
+    isIncome: false
+  },
+  {
+    id:3,
+    date: moment().add(1,'M').format('yyyy.MM.DD'),
     cost:12000,
     content : "밥먹기",
+    isIncome: false
+  },
+  {
+    id:4,
+    date: moment().add(1,'M').format('yyyy.MM.DD'),
+    cost:300000,
+    content : "밥먹기222",
     isIncome: false
   },
 ]
@@ -38,8 +52,8 @@ function App() {
   return (
     <div className="container mx-auto">
       <Header title={"Account Book"} />
-      <Current data={data}/>
-      <AccountList data={data}/>
+      <Current data={data} quarter={quarter} setQuarter={setQuarter}/>
+      <AccountList data={data} quarter={quarter}/>
     </div>
   );
 }
