@@ -1,8 +1,11 @@
 const Button = ({text, name, onClick}) => {
-    const classNm = [` text-center bg-gray-300 ${name} `].join("");
+    const classNm = [`py-1 justify-self-center text-center rounded cursor-pointer ${name} `].join("");
     return (
-        <div className={classNm} onClick={onClick}>
-            {text}
+        <div >
+            <button 
+                className = {classNm} 
+                onClick = {onClick}
+            >{text}</button>
         </div>
     )
 }

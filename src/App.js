@@ -4,6 +4,10 @@ import AccountList from './component/AccountList';
 import Current from './component/Current';
 import Header from './component/Header';
 import React, { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import New from './pages/new';
+import Edit from './pages/Edit';
+import Home from './pages/Home';
 
 const mockData = [
   {
@@ -49,11 +53,21 @@ function App() {
   const [data, setData] = useState(mockData); // 가계 데이터
   const [quarter, setQuarter] = useState(1);  // 분기 //moment().quarter();
 
+  const onDelete = (targetId) => {
+    setData(data.filter((it) => it.id !== targetId));
+  }
+
   return (
     <div className="container mx-auto">
-      <Header title={"Account Book"} />
+      <Routes>
+        <Route path='/' element={<Home data={data} quarter={quarter} setQuarter={setQuarter} onDelete={onDelete}/>}/>
+        <Route path='/new' element={<New />}/>
+        <Route path='/edit/:id' element={<Edit />}/>
+      </Routes>
+
+      {/* <Header title={"Account Book"} />
       <Current data={data} quarter={quarter} setQuarter={setQuarter}/>
-      <AccountList data={data} quarter={quarter}/>
+      <AccountList data={data} quarter={quarter} onDelete={onDelete}/> */}
     </div>
   );
 }

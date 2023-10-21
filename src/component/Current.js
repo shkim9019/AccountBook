@@ -1,42 +1,50 @@
+import { useEffect, useState } from 'react';
+import moment from 'moment';
+
 const Current = ({data, quarter, setQuarter}) => {
-    const inComeList = data.filter((it) => it.isIncome === true); // 수입 리스트
-    const outgoingsList = data.filter((it) => it.isIncome !== true); // 지출 리스트
+    const quarterData = data.filter((it) => moment(it.date).quarter() === quarter);
+    const [inCome, setIncome] = useState(0);
+    const [outgoings, setOutgoings] = useState(0);
 
-    // 수입 총액
-    const inCome = inComeList.reduce((acc, cur) => {
-        acc += cur.cost;
-        return acc;
-    },0);
+    useEffect(()=>{
+        const inComeList    = quarterData.filter((it) => it.isIncome === true);
+        const outgoingsList = quarterData.filter((it) => it.isIncome !== true);
 
-    // 지출 총액
-    const outgoings = outgoingsList.reduce((acc, cur) => {
-        acc += cur.cost;
-        return acc;
-    },0);
+        setIncome( inComeList.reduce((acc, cur) => {
+                acc += cur.cost;
+                return acc;
+            },0).toLocaleString()
+        );
+        setOutgoings( outgoingsList.reduce((acc, cur) => {
+            acc += cur.cost;
+            return acc;
+        },0).toLocaleString()
+    );
+    },[quarter]);
 
     const onChangeQuarter = (e) => {
         setQuarter(Number(e.target.value))
     }
 
     return (
-        <div className="Current container mx-auto my-10">
-            <div className="flex py-5">
-                <h4 className="text-2xl grow">📆 {quarter}분기 가계 현황</h4>
-                <select className="w-1/6 border-solid border-2" onChange={onChangeQuarter}>
+        <div className="Current container mx-auto w-9/12">
+            <div className="flex">
+                <h4 className="text-2xl grow font-bold">📆 {quarter}분기 가계 현황</h4>
+                <select className="w-1/6 border-solid border-2 text-center font-medium" onChange={onChangeQuarter}>
                     <option value={1}>1분기</option>
                     <option value={2}>2분기</option>
                     <option value={3}>3분기</option>
                     <option value={4}>4분기</option>
                 </select>
             </div>
-            <div className="px-60 py-10 flex place-content-between border-solid border-2 text-xl">
-                <div className="grid flex">
-                    <div className="grid-cols-6 text-2xl">수입</div>
-                    <div className="grid-cols-6">+ {inCome}원</div>
+            <div className="px-60 my-5 flex place-content-between border-solid border-2 text-xl">
+                <div className="my-5 text-center w-3/6">
+                    <div className="text-2xl font-semibold">수입</div>
+                    <div className="text-xl pt-5 ">➕ {inCome} 원</div>
                 </div>
-                <div className="grid flex">
-                    <div className="grid-cols-6 text-2xl">지출</div>
-                    <div className="grid-cols-6">- {outgoings}원</div>
+                <div className="my-5 text-center w-3/6">
+                    <div className="text-2xl font-semibold">지출</div>
+                    <div className="text-xl pt-5">➖ {outgoings} 원</div>
                 </div>
             </div>
         </div>
