@@ -1,9 +1,12 @@
 import Button from "./Button";
 
-const AccountListItem = ({id, date, content, cost, onDelete}) => {
+const AccountListItem = ({id, date, content, cost, onDelete, goEditPage}) => {
     const onClickDelete = () => {
-        console.log("onClickDelete", id)
         onDelete(id);
+    }
+
+    const onClickEdit = () => {
+        goEditPage(id);
     }
 
     return (
@@ -11,7 +14,11 @@ const AccountListItem = ({id, date, content, cost, onDelete}) => {
             <div>{date}</div>
             <div className='text-left'>{content}</div>
             <div className='text-right w-9/12'>{cost.toLocaleString() + " 원"}</div>
-            <Button text={"수정"} name={"w-10/12 bg-indigo-300"}/>
+            <Button 
+                text={"수정"} 
+                onClick={onClickEdit}
+                name={"w-10/12 bg-indigo-300"}
+            />
             <Button 
                 text={"삭제"} 
                 onClick={onClickDelete}

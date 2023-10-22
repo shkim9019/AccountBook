@@ -1,9 +1,6 @@
 import moment from 'moment';
 import './App.css';
-import AccountList from './component/AccountList';
-import Current from './component/Current';
-import Header from './component/Header';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import New from './pages/new';
 import Edit from './pages/Edit';
@@ -47,28 +44,59 @@ const mockData = [
   },
 ]
 
-// export const dataContext = React.createContext();
+export const dataContext = React.createContext();
 
 function App() {
   const [data, setData] = useState(mockData); // 가계 데이터
   const [quarter, setQuarter] = useState(1);  // 분기 //moment().quarter();
+  const idRef = useRef(5);
 
   const onDelete = (targetId) => {
     setData(data.filter((it) => it.id !== targetId));
   }
 
-  return (
-    <div className="container mx-auto">
-      <Routes>
-        <Route path='/' element={<Home data={data} quarter={quarter} setQuarter={setQuarter} onDelete={onDelete}/>}/>
-        <Route path='/new' element={<New />}/>
-        <Route path='/edit/:id' element={<Edit />}/>
-      </Routes>
+  const onCreate = (target) => {
+    const newItem = {
+      id: idRef.current,
+      date: target.date,
+      cost: target.cost,
+      content:  target.content,
+      isIncome: target.isIncome
+    }
 
-      {/* <Header title={"Account Book"} />
-      <Current data={data} quarter={quarter} setQuarter={setQuarter}/>
-      <AccountList data={data} quarter={quarter} onDelete={onDelete}/> */}
-    </div>
+    setData([newItem, ...data]);
+    idRef.current +=1;
+  }
+
+  const onEdit = (target) => {
+    const editItem = {
+      id: Number(target.id),
+      date:target.date,
+      cost: Number(target.cost),
+      content:target.content,
+      isIncome: target.isIncome
+    }
+
+    setData(data.map((it)=> String(it.id) === String(target.id) ? {...editItem}:it));
+  }
+
+  return (
+    <dataContext.Provider value={data}>
+      <div className="container mx-auto">
+        <Routes>
+          <Route path='/' 
+                element={
+                  <Home quarter={quarter} setQuarter={setQuarter} onDelete={onDelete}  />
+                }/>
+          <Route path='/new' element={<New onCreate={onCreate}/>}/>
+          <Route path='/edit/:id' element={<Edit onEdit={onEdit} />}/>
+        </Routes>
+
+        {/* <Header title={"Account Book"} />
+        <Current data={data} quarter={quarter} setQuarter={setQuarter}/>
+        <AccountList data={data} quarter={quarter} onDelete={onDelete}/> */}
+      </div>
+    </dataContext.Provider>
   );
 }
 

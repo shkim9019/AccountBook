@@ -2,13 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import AccountListItem from './AccountListItem';
 import Button from "./Button";
 import moment from "moment";
+import { useContext } from 'react';
+import { dataContext } from '../App';
 
-const AccountList = ({data, quarter, onDelete}) => {
+const AccountList = ({quarter, onDelete}) => {
+    const data = useContext(dataContext);
     const copyData = data.filter((it) => moment(it.date).quarter() === quarter);
     const navigate = useNavigate();
     
     const goNewPage = () => {
         navigate("/new")
+    }
+
+    const goEditPage = (id) => {
+        navigate(`edit/${id}`);
     }
 
     return (
@@ -32,7 +39,7 @@ const AccountList = ({data, quarter, onDelete}) => {
                 <hr />
                 { copyData.length > 0 ? 
                     copyData.map(
-                        (it) => <AccountListItem {...it} key={it.id} onDelete={onDelete}/> 
+                        (it) => <AccountListItem {...it} key={it.id} onDelete={onDelete} goEditPage={goEditPage}/> 
                     )
                     : ( <div className=" my-5 text-center text-lg">내역이 없습니다.</div> )
                 }

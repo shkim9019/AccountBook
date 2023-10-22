@@ -1,52 +1,66 @@
 import { useNavigate } from 'react-router-dom';
 import Header from '../component/Header';
 import Button from '../component/Button';
+import { useRef, useState } from 'react';
+import moment from 'moment';
+import Editor from '../component/Editor';
 
-const New = () => {
+const New = ({onCreate}) => {
     const navigate = useNavigate();
+    const [isIncome, setIsIncome] = useState(true);
+    const dateRef = useRef();
+    const costRef = useRef();
+    const contentRef = useRef();
     
     const goBack = () => {
-        navigate("/", {replace : true});
+        navigate(-1);
+    }
+
+    const changeIsIncome = (e) => {
+      const value = e.target.value;
+      value = value === 1 ? true: false;
+      setIsIncome(value);
+    }
+
+    const onClickCreate = () => {
+      const newItem = {
+        date: moment(dateRef.current.value).format('yyyy.MM.DD'),
+        cost: costRef.current.value,
+        content:  contentRef.current.value,
+        isIncome: isIncome
+      }
+      onCreate(newItem);
+      navigate("/", {replace:true})
     }
 
     return (<>
           <Header 
-            leftChild={ <Button text={"< 뒤로가기"} onClick={goBack}/>}
+            leftChild={ 
+              <Button 
+                text={"< 뒤로가기"} 
+                onClick={goBack}
+                name={"w-56 h-12 bg-indigo-200"}
+                />
+            }
             title={"Add Account"}
-            rightChild = { <Button text={"등록하기"} /> }
+            rightChild = { 
+              <Button 
+                text={"등록하기"} 
+                onClick={onClickCreate}
+                name={"w-56 h-12 bg-indigo-300"}
+              />
+            }
           />
-          <div className="container mx-auto pt-20 w-9/12">
-            <h4 className="text-2xl grow font-bold">📆 날짜 선택</h4>
-            <div className="border-solid border-2 my-5 px-2 w-fit">
-              <input type="date" />
-            </div>
-            <h4 className="text-2xl grow font-bold pt-5">🗒️내용</h4>
-            <div className="border-solid border-2 my-5 w-full">
-              <textarea className="w-full h-60 resize-y px-2 pt-2 border-none outline-none" />
-            </div>
-            <h4 className="text-2xl grow font-bold pt-5">💰금액</h4>
-            <div className="border-solid border-2 my-5 px-2 py-2 w-full">
-              <div className='pt-2 px-2'>
-                <input 
-                  type="radio" 
-                  value={"income"}
-                  className="mr-1"
-                /> 수입
-                <input 
-                  type="radio"
-                  value={"outgoings"}
-                  className="ml-10 mr-1"
-                /> 지출
-              </div>
-              <div className='pt-3 px-2'>
-                <input 
-                  type="text"
-                  className='border-solid border'
-                  placeholder='금액을 입력하세요.'
-                /> 원
-              </div>
-            </div>
-          </div>
+          <Editor 
+            changeIsIncome={changeIsIncome}
+            dateRef={dateRef}
+            contentRef={contentRef}
+            costRef={costRef}
+            date={""}
+            content={""}
+            cost={0}
+            isIncome={isIncome}
+          />
         </>
     )
 }

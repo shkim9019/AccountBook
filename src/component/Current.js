@@ -1,7 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
+import { dataContext } from '../App';
 
-const Current = ({data, quarter, setQuarter}) => {
+const Current = ({quarter, setQuarter}) => {
+    const data = useContext(dataContext);
+
+    console.log(data);
+
     const quarterData = data.filter((it) => moment(it.date).quarter() === quarter);
     const [inCome, setIncome] = useState(0);
     const [outgoings, setOutgoings] = useState(0);

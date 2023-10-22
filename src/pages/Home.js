@@ -1,12 +1,13 @@
+import { useContext } from 'react';
 import AccountList from '../component/AccountList';
 import Current from '../component/Current';
 import Header from '../component/Header';
 
-const Home = ({data, quarter, setQuarter, onDelete}) => {
+const Home = ({quarter, setQuarter, onDelete}) => {
   return (<>
     <Header title={"Account Book"} />
-    <Current data={data} quarter={quarter} setQuarter={setQuarter}/>
-    <AccountList data={data} quarter={quarter} onDelete={onDelete}/>
+    <Current quarter={quarter} setQuarter={setQuarter}/>
+    <AccountList quarter={quarter} onDelete={onDelete}/>
     </>
   )
 }
